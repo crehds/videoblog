@@ -1,0 +1,21 @@
+{
+  "name": "videoblog",
+  "version": "1.0.0",
+  "description": "video blog for practice firebase",
+  "main": "public/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch:css": "stylus -w public/stylus/index.styl -o public/css/index.css"
+  },
+  "keywords": [
+    "video",
+    "blog",
+    "firebase",
+    "js"
+  ],
+  "author": "carlos rodriguez",
+  "license": "MIT",
+  "dependencies": {
+    "stylus": "^0.54.8"
+  }
+}
