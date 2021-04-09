@@ -1,11 +1,47 @@
 $(() => {
-  $('.tooltipped').tooltip({ delay: 50 })
-  $('.modal').modal()
-
-  firebase.initializeApp(firebaseConfig);
+  $('.tooltipped').tooltip({ enterDelay: 50 });
+  $('.modal').modal();
+  M.AutoInit();
+  firebase.initializeApp(varConfig);
   firebase.analytics();
 
-  // Se registra el service worker
+  // Evento boton inicio sesion
+  $('#btnInicioSesion').click(() => {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      $('#btnInicioSesion').text('Iniciar Sesión');
+      return firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          $('#avatar').attr('src', 'imagenes/usuario.png');
+          
+          M.toast(`SignOut Correcto`, 4000);
+        })
+        .catch((error) => {
+          M.toast(`Error al realizar SignOut => ${error}`, 4000);
+        });
+    }
+
+    $('#emailSesion').val('');
+    $('#passwordSesion').val('');
+    $('#modalSesion').modal('open');
+  });
+
+  $('#avatar').click(() => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        $('#avatar').attr('src', 'imagenes/usuario.png');
+        M.toast(`SignOut correcto`, 4000);
+      })
+      .catch((error) => {
+        M.toast(`Error al realizar SignOut ${error}`, 4000);
+      });
+  });
+});
+// Se registra el service worker
 //   navigator.serviceWorker
 //     .register('notificaciones-sw.js')
 //     .then(registro => {

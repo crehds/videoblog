@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link href="https://fonts.googleapis.com/css?family=Allerta|Montserrat" rel="stylesheet">
     <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--build:css css/styles.min.css -->
     <link rel="stylesheet" type="text/css" href="css/index.css">
@@ -23,7 +23,7 @@
         </figure>
         <h2 class="titulo">VideoBlog Geek</h2>
         <h3 class="titulo-a">Encuentra los Videos mas poderosos de los geeks</h2>
-            <a id="btnInicioSesion" class="modal-trigger waves-effect waves-light btn btnPpal">Iniciar Sesión</a>
+            <a id="btnInicioSesion" class="waves-effect waves-light btn btnPpal">Iniciar Sesión</a>
             <figure class="header-avatar">
                 <img id="avatar" src="imagenes/usuario.png" alt="Avatar">
             </figure>
@@ -215,18 +215,20 @@
 
 </body>
 
-<script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
 <!-- Compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script> -->
 
 <!-- Firebase App is always required and must be first -->
 <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-analytics.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.3.0/firebase-auth.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.3.0/firebase-firestore.js"></script>
 <!--
 <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase-auth.js"></script>
 
@@ -239,12 +241,12 @@
 
 <!--build:js js/main.min.js -->
 <script type="text/javascript" src="js/config/ConfigFirebase.js"></script>
-<!--<script type="text/javascript" src="js/util/util.js"></script>
+<script type="text/javascript" src="js/util/util.js"></script>
 <script type="text/javascript" src="js/post/post.js"></script>
 <script type="text/javascript" src="js/general.js"></script>
 <script type="text/javascript" src="js/auth/autenticacion.js"></script>
 <script type="text/javascript" src="js/auth/authController.js"></script>
-<script type="text/javascript" src="js/post/postController.js"></script> -->
+<script type="text/javascript" src="js/post/postController.js"></script>
 
 
 <!-- endbuild -->
