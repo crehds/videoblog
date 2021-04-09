@@ -9,17 +9,20 @@ $(() => {
   $('#btnInicioSesion').click(() => {
     const user = firebase.auth().currentUser;
     if (user) {
-      $('#btnInicioSesion').text('Iniciar Sesión');
+      $('#btnInicioSesion').text('Cerrar sesion');
       return firebase
         .auth()
         .signOut()
         .then(() => {
           $('#avatar').attr('src', 'imagenes/usuario.png');
 
-          M.toast(`SignOut Correcto`, 4000);
+          M.toast({ html: `SignOut Correcto`, displayLength: 4000 });
         })
         .catch((error) => {
-          M.toast(`Error al realizar SignOut => ${error}`, 4000);
+          M.toast({
+            html: `Error al realizar SignOut => ${error}`,
+            displayLength: 40000,
+          });
         });
     }
 
@@ -42,6 +45,20 @@ $(() => {
           displayLength: 4000,
         });
       });
+  });
+
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      $('#btnInicioSesion').text('Salir');
+      if (user.photoURL) {
+        $('#avatar').attr('src', user.photoURL);
+      } else {
+        $('#avatar').attr('src', 'imagenes/usuario_auth.png');
+      }
+    } else {
+      $('#btnInicioSesion').text('Iniciar Sesión');
+      $('#avatar').attr('src', 'imagenes/usuario.png');
+    }
   });
 });
 // Se registra el service worker
