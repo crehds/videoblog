@@ -54,6 +54,51 @@ class Autenticacion {
         M.toast({ html: error.message, displayLength: 4000 });
       });
   }
+
+  authGoogleAccount() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then((result) => {
+        $('#avatar').attr('src', result.user.photoURL);
+        $('.modal').modal('close');
+        M.toast({
+          html: `Bienvenido ${result.user.displayName}`,
+          displayLength: 4000,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        M.toast({
+          html: `Error al autenticarse con google: ${error.message}`,
+          displayLength: 4000,
+        });
+      });
+  }
+
+  authFacebookAccount() {
+    const provider = new firebase.auth.FacebookAuthProvider();
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then((result) => {
+        $('#avatar').attr('src', result.user.photoURL);
+        $('.modal').modal('close');
+        M.toast({
+          html: `Bienvenido ${result.user.displayName}`,
+          displayLength: 4000,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        M.toast({
+          html: `Error al autenticarse con facebook: ${error.message}`,
+          displayLength: 4000,
+        });
+      });
+  }
   // autEmailPass (email, password) {
   //   firebase.auth().signInWithEmailAndPassword(email, password).then(result => {
   //     if (result.user.emailVerified) {
