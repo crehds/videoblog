@@ -12,6 +12,8 @@ $(() => {
   $('#btnInicioEmail').click(() => {
     const email = $('#emailSesion').val();
     const password = $('#passwordSesion').val();
+    const auth = new Autenticacion()
+    auth.authEmailPass(email, password)
     // auth.autEmailPass(email, password)
   });
 

@@ -1,7 +1,7 @@
 $(() => {
   $('.tooltipped').tooltip({ enterDelay: 50 });
   $('.modal').modal();
-  M.AutoInit();
+  // M.AutoInit();
   firebase.initializeApp(varConfig);
   firebase.analytics();
 
@@ -15,7 +15,7 @@ $(() => {
         .signOut()
         .then(() => {
           $('#avatar').attr('src', 'imagenes/usuario.png');
-          
+
           M.toast(`SignOut Correcto`, 4000);
         })
         .catch((error) => {
@@ -34,10 +34,13 @@ $(() => {
       .signOut()
       .then(() => {
         $('#avatar').attr('src', 'imagenes/usuario.png');
-        M.toast(`SignOut correcto`, 4000);
+        M.toast({ html: `SignOut correcto`, displayLength: 4000 });
       })
       .catch((error) => {
-        M.toast(`Error al realizar SignOut ${error}`, 4000);
+        M.toast({
+          html: `Error al realizar SignOut ${error}`,
+          displayLength: 4000,
+        });
       });
   });
 });

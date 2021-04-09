@@ -1,4 +1,27 @@
 class Autenticacion {
+  authEmailPass(email, password) {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((result) => {
+        if (result.user.emailVerified) {
+          $('#avatar').attr('src', 'imagenes/usuario_auth.png');
+          M.toast({
+            html: `Bienvenido ${result.user.displayName}`,
+            displayLength: 5000,
+          });
+        } else {
+          firebase.auth().signOut();
+          M.toast({
+            html: `Porfavor realiza la verificacion de la cuenta`,
+            displayLength: 5000,
+          });
+        }
+      });
+
+    $('.modal').modal('close');
+  }
+
   createAccountEmailPass(email, password, nombres) {
     firebase
       .auth()
@@ -9,7 +32,7 @@ class Autenticacion {
         });
 
         const configuration = {
-          url: 'http://localhost:5500/',
+          url: 'http://localhost:5500/public',
         };
 
         result.user.sendEmailVerification(configuration).catch((error) => {
