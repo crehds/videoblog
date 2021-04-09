@@ -1,11 +1,12 @@
 class Post {
-  constructor () {
-    this.db = firebase.firestore()
-    const settings = { timestampsInSnapshots: true }
-    this.db.settings(settings)
+  constructor() {
+    this.db = firebase.firestore();
+    // recupera datos datetime(convierte) a timestamp
+    const settings = { timestampsInSnapshots: true };
+    this.db.settings(settings);
   }
 
-  crearPost (uid, emailUser, titulo, descripcion, imagenLink, videoLink) {
+  crearPost(uid, emailUser, titulo, descripcion, imagenLink, videoLink) {
     return this.db
       .collection('posts')
       .add({
@@ -15,27 +16,29 @@ class Post {
         descripcion: descripcion,
         imagenLink: imagenLink,
         videoLink: videoLink,
-        fecha: firebase.firestore.FieldValue.serverTimestamp()
+        fecha: firebase.firestore.FieldValue.serverTimestamp(),
       })
-      .then(refDoc => {
-        console.log(`Id del post => ${refDoc.id}`)
+      .then((refDoc) => {
+        console.log(`Id del post => ${refDoc.id}`);
+        M.toast({ html: `Id del post => ${refDoc.id}`, displaylengthL: 3000 });
       })
-      .catch(error => {
-        console.error(`Error creando el post => ${error}`)
-      })
+      .catch((error) => {
+        console.error(`Error creando el post => ${error}`);
+        M.toast({ html: `Error creando el post => ${error.message}`, displaylengthL: 3000 });
+      });
   }
 
-  consultarTodosPost () {
+  consultarTodosPost() {
     this.db
       .collection('posts')
       .orderBy('fecha', 'asc')
       .orderBy('titulo', 'asc')
-      .onSnapshot(querySnapshot => {
-        $('#posts').empty()
+      .onSnapshot((querySnapshot) => {
+        $('#posts').empty();
         if (querySnapshot.empty) {
-          $('#posts').append(this.obtenerTemplatePostVacio())
+          $('#posts').append(this.obtenerTemplatePostVacio());
         } else {
-          querySnapshot.forEach(post => {
+          querySnapshot.forEach((post) => {
             let postHtml = this.obtenerPostTemplate(
               post.data().autor,
               post.data().titulo,
@@ -43,25 +46,25 @@ class Post {
               post.data().videoLink,
               post.data().imagenLink,
               Utilidad.obtenerFecha(post.data().fecha.toDate())
-            )
-            $('#posts').append(postHtml)
-          })
+            );
+            $('#posts').append(postHtml);
+          });
         }
-      })
+      });
   }
 
-  consultarPostxUsuario (emailUser) {
+  consultarPostxUsuario(emailUser) {
     this.db
       .collection('posts')
       .orderBy('fecha', 'asc')
       .orderBy('titulo', 'asc')
       .where('autor', '==', emailUser)
-      .onSnapshot(querySnapshot => {
-        $('#posts').empty()
+      .onSnapshot((querySnapshot) => {
+        $('#posts').empty();
         if (querySnapshot.empty) {
-          $('#posts').append(this.obtenerTemplatePostVacio())
+          $('#posts').append(this.obtenerTemplatePostVacio());
         } else {
-          querySnapshot.forEach(post => {
+          querySnapshot.forEach((post) => {
             let postHtml = this.obtenerPostTemplate(
               post.data().autor,
               post.data().titulo,
@@ -69,41 +72,42 @@ class Post {
               post.data().videoLink,
               post.data().imagenLink,
               Utilidad.obtenerFecha(post.data().fecha.toDate())
-            )
-            $('#posts').append(postHtml)
-          })
+            );
+            $('#posts').append(postHtml);
+          });
         }
-      })
+      });
   }
 
-  subirImagenPost (file, uid) {
-    const refStorage = firebase.storage().ref(`imgsPosts/${uid}/${file.name}`)
-    const task = refStorage.put(file)
+  subirImagenPost(file, uid) {
+    const refStorage = firebase.storage().ref(`imgsPosts/${uid}/${file.name}`);
+    const task = refStorage.put(file);
 
     task.on(
       'state_changed',
-      snapshot => {
-        const porcentaje = snapshot.bytesTransferred / snapshot.totalBytes * 100
-        $('.determinate').attr('style', `width: ${porcentaje}%`)
+      (snapshot) => {
+        const porcentaje =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        $('.determinate').attr('style', `width: ${porcentaje}%`);
       },
-      err => {
-        Materialize.toast(`Error subiendo archivo = > ${err.message}`, 4000)
+      (err) => {
+        Materialize.toast(`Error subiendo archivo = > ${err.message}`, 4000);
       },
       () => {
         task.snapshot.ref
           .getDownloadURL()
-          .then(url => {
-            console.log(url)
-            sessionStorage.setItem('imgNewPost', url)
+          .then((url) => {
+            console.log(url);
+            sessionStorage.setItem('imgNewPost', url);
           })
-          .catch(err => {
-            Materialize.toast(`Error obteniendo downloadURL = > ${err}`, 4000)
-          })
+          .catch((err) => {
+            Materialize.toast(`Error obteniendo downloadURL = > ${err}`, 4000);
+          });
       }
-    )
+    );
   }
 
-  obtenerTemplatePostVacio () {
+  obtenerTemplatePostVacio() {
     return `<article class="post">
       <div class="post-titulo">
           <h5>Crea el primer Post a la comunidad</h5>
@@ -128,10 +132,10 @@ class Post {
       </div>
       <div class="post-footer container">         
       </div>
-  </article>`
+  </article>`;
   }
 
-  obtenerPostTemplate (
+  obtenerPostTemplate(
     autor,
     titulo,
     descripcion,
@@ -171,7 +175,7 @@ class Post {
                     </div>        
                 </div>
             </div>
-        </article>`
+        </article>`;
     }
 
     return `<article class="post">
@@ -206,6 +210,6 @@ class Post {
                         </div>        
                     </div>
                 </div>
-            </article>`
+            </article>`;
   }
 }
