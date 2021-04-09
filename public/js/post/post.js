@@ -1,13 +1,7 @@
 class Post {
-  constructor() {
-    this.db = firebase.firestore();
-    // recupera datos datetime(convierte) a timestamp
-    const settings = { timestampsInSnapshots: true };
-    this.db.settings(settings);
-  }
 
   crearPost(uid, emailUser, titulo, descripcion, imagenLink, videoLink) {
-    return this.db
+    return db
       .collection('posts')
       .add({
         uid: uid,
@@ -24,17 +18,22 @@ class Post {
       })
       .catch((error) => {
         console.error(`Error creando el post => ${error}`);
-        M.toast({ html: `Error creando el post => ${error.message}`, displaylengthL: 3000 });
+        M.toast({
+          html: `Error creando el post => ${error.message}`,
+          displaylengthL: 3000,
+        });
       });
   }
 
-  consultarTodosPost() {
-    this.db
+  getAllPost() {
+    db
       .collection('posts')
       .orderBy('fecha', 'asc')
       .orderBy('titulo', 'asc')
       .onSnapshot((querySnapshot) => {
-        $('#posts').empty();
+        //querySnapshot es la copia de la data luego de suscribirse a la coleccion posts
+        //se usa el termino suscribirse pues cualquier cambio que suceda se nos informará
+        $('#posts').empty(); //limpiamos todo los posts(front-end)
         if (querySnapshot.empty) {
           $('#posts').append(this.obtenerTemplatePostVacio());
         } else {
@@ -53,8 +52,8 @@ class Post {
       });
   }
 
-  consultarPostxUsuario(emailUser) {
-    this.db
+  getPostByUser(emailUser) {
+    db
       .collection('posts')
       .orderBy('fecha', 'asc')
       .orderBy('titulo', 'asc')

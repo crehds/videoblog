@@ -5,6 +5,10 @@ $(() => {
   firebase.initializeApp(varConfig);
   firebase.analytics();
 
+  db = firebase.firestore();
+  // recupera datos datetime(convierte) a timestamp
+  const settings = { timestampsInSnapshots: true, enablePersistence: true };
+  db.settings(settings);
   // Evento boton inicio sesion
   $('#btnInicioSesion').click(() => {
     const user = firebase.auth().currentUser;
@@ -47,6 +51,8 @@ $(() => {
       });
   });
 
+  const post = new Post();
+
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       $('#btnInicioSesion').text('Salir');
@@ -58,6 +64,25 @@ $(() => {
     } else {
       $('#btnInicioSesion').text('Iniciar Sesión');
       $('#avatar').attr('src', 'imagenes/usuario.png');
+    }
+  });
+
+  post.getAllPost();
+  $('#btnTodoPost').click(() => {
+    $('#tituloPost').text('Posts de la Comunidad');
+    post.getAllPost();
+  });
+
+  $('#btnMisPost').click(() => {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      post.getPostByUser(user.email);
+      $('#tituloPost').text('Mis posts');
+    } else {
+      M.toast({
+        html: `Debes estar autenticado para ver tus posts`,
+        displayLength: 4000,
+      });
     }
   });
 });
@@ -148,41 +173,6 @@ $(() => {
 //       $('#btnInicioSesion').text('Iniciar Sesión')
 //       $('#avatar').attr('src', 'imagenes/usuario.png')
 //     }
-//   })
-
-//   // Evento boton inicio sesion
-//   $('#btnInicioSesion').click(() => {
-//     const user = firebase.auth().currentUser
-//     if (user) {
-//       $('#btnInicioSesion').text('Iniciar Sesión')
-//       return firebase
-//         .auth()
-//         .signOut()
-//         .then(() => {
-//           $('#avatar').attr('src', 'imagenes/usuario.png')
-//           Materialize.toast(`SignOut Correcto`, 4000)
-//         })
-//         .catch(error => {
-//           Materialize.toast(`Error al realizar SignOut => ${error}`, 4000)
-//         })
-//     }
-
-//     $('#emailSesion').val('')
-//     $('#passwordSesion').val('')
-//     $('#modalSesion').modal('open')
-//   })
-
-//   $('#avatar').click(() => {
-//     firebase
-//       .auth()
-//       .signOut()
-//       .then(() => {
-//         $('#avatar').attr('src', 'imagenes/usuario.png')
-//         Materialize.toast(`SignOut correcto`, 4000)
-//       })
-//       .catch(error => {
-//         Materialize.toast(`Error al realizar SignOut ${error}`, 4000)
-//       })
 //   })
 
 //   $('#btnTodoPost').click(() => {
