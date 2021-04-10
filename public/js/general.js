@@ -4,12 +4,13 @@ $(() => {
   // M.AutoInit();
   firebase.initializeApp(varConfig);
   firebase.analytics();
-
-  db = firebase.firestore();
   // recupera datos datetime(convierte) a timestamp
-  const settings = { timestampsInSnapshots: true, enablePersistence: true };
+  const settings = { enablePersistence: true };
+  db = firebase.firestore();
   db.settings(settings);
   // Evento boton inicio sesion
+  const post = new Post();
+  post.getAllPost();
   $('#btnInicioSesion').click(() => {
     const user = firebase.auth().currentUser;
     if (user) {
@@ -51,8 +52,6 @@ $(() => {
       });
   });
 
-  const post = new Post();
-
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       $('#btnInicioSesion').text('Salir');
@@ -67,7 +66,8 @@ $(() => {
     }
   });
 
-  post.getAllPost();
+  
+
   $('#btnTodoPost').click(() => {
     $('#tituloPost').text('Posts de la Comunidad');
     post.getAllPost();

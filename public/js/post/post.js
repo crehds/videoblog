@@ -1,9 +1,7 @@
 class Post {
-
-  crearPost(uid, emailUser, titulo, descripcion, imagenLink, videoLink) {
-    return db
-      .collection('posts')
-      .add({
+  async crearPost(uid, emailUser, titulo, descripcion, imagenLink, videoLink) {
+    try {
+      const addPost = await db.collection('posts').add({
         uid: uid,
         autor: emailUser,
         titulo: titulo,
@@ -11,23 +9,20 @@ class Post {
         imagenLink: imagenLink,
         videoLink: videoLink,
         fecha: firebase.firestore.FieldValue.serverTimestamp(),
-      })
-      .then((refDoc) => {
-        console.log(`Id del post => ${refDoc.id}`);
-        M.toast({ html: `Id del post => ${refDoc.id}`, displaylengthL: 3000 });
-      })
-      .catch((error) => {
-        console.error(`Error creando el post => ${error}`);
-        M.toast({
-          html: `Error creando el post => ${error.message}`,
-          displaylengthL: 3000,
-        });
       });
+      console.log(`Id del post => ${addPost.id}`);
+      M.toast({ html: `Id del post => ${addPost.id}`, displaylengthL: 3000 });
+    } catch (error) {
+      console.error(`Error creando el post => ${error}`);
+      M.toast({
+        html: `Error creando el post => ${error.message}`,
+        displaylengthL: 3000,
+      });
+    }
   }
 
   getAllPost() {
-    db
-      .collection('posts')
+    db.collection('posts')
       .orderBy('fecha', 'asc')
       .orderBy('titulo', 'asc')
       .onSnapshot((querySnapshot) => {
@@ -38,12 +33,15 @@ class Post {
           $('#posts').append(this.obtenerTemplatePostVacio());
         } else {
           querySnapshot.forEach((post) => {
+            console.log(typeof post.data());
+            console.log(post.data());
             let postHtml = this.obtenerPostTemplate(
               post.data().autor,
               post.data().titulo,
               post.data().descripcion,
               post.data().videoLink,
               post.data().imagenLink,
+              post.data(),
               Utilidad.obtenerFecha(post.data().fecha.toDate())
             );
             $('#posts').append(postHtml);
@@ -53,8 +51,7 @@ class Post {
   }
 
   getPostByUser(emailUser) {
-    db
-      .collection('posts')
+    db.collection('posts')
       .orderBy('fecha', 'asc')
       .orderBy('titulo', 'asc')
       .where('autor', '==', emailUser)
@@ -63,7 +60,9 @@ class Post {
         if (querySnapshot.empty) {
           $('#posts').append(this.obtenerTemplatePostVacio());
         } else {
+          console.log(querySnapshot);
           querySnapshot.forEach((post) => {
+            console.log(post.data());
             let postHtml = this.obtenerPostTemplate(
               post.data().autor,
               post.data().titulo,
@@ -79,9 +78,11 @@ class Post {
   }
 
   subirImagenPost(file, uid) {
-    const refStorage = firebase.storage().ref(`imgsPosts/${uid}/${file.name}`);
+    const refStorage = firebase.storage().ref().child(`imgsPosts/${uid}/${file.name}`);
+    //se manda a realizar la tarea en segundo plano
     const task = refStorage.put(file);
 
+    //on(string para indicar que se va a observar(el estado), función que se ejecuta mientras se sube el archivo trabjando sobre una copia(snapshot), función por si algún error sucede, función cuando el archivo se subió)
     task.on(
       'state_changed',
       (snapshot) => {
@@ -90,7 +91,10 @@ class Post {
         $('.determinate').attr('style', `width: ${porcentaje}%`);
       },
       (err) => {
-        Materialize.toast(`Error subiendo archivo = > ${err.message}`, 4000);
+        M.toast({
+          html: `Error subiendo archivo = > ${err.message}`,
+          displayLength: 4000,
+        });
       },
       () => {
         task.snapshot.ref
@@ -100,7 +104,10 @@ class Post {
             sessionStorage.setItem('imgNewPost', url);
           })
           .catch((err) => {
-            Materialize.toast(`Error obteniendo downloadURL = > ${err}`, 4000);
+            M.toast({
+              html: `Error obteniendo downloadURL = > ${err}`,
+              displayLength: 4000,
+            });
           });
       }
     );
@@ -140,8 +147,10 @@ class Post {
     descripcion,
     videoLink,
     imagenLink,
+    post,
     fecha
   ) {
+    console.log(post);
     if (imagenLink) {
       return `<article class="post">
             <div class="post-titulo">
