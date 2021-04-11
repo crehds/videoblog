@@ -1,28 +1,24 @@
 {
   "hosting": {
     "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "redirects" : [
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "redirects": [
       {
         "source": "/posts",
         "destination": "/",
         "type": 301
       }
     ],
-    "rewrites":[
+    "rewrites": [
       {
         "source": "/**",
         "destination": "/index.html"
       }
     ],
-    "headers":[
+    "headers": [
       {
         "source": "**/*.@(jpg|jpeg|gif|png)",
-        "headers":[
+        "headers": [
           {
             "key": "Cache-Control",
             "value": "max-age=7200"
