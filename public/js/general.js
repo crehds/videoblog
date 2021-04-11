@@ -10,6 +10,7 @@ $(() => {
   db.settings(settings);
   // Evento boton inicio sesion
   const post = new Post();
+  const comment = new Comment();
   post.getAllPost();
   $('#btnInicioSesion').click(() => {
     const user = firebase.auth().currentUser;
